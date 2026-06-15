@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HideIT -- Tactical Cryptography & Steganography Platform</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAaCAYAAABGiCfwAAACaUlEQVR4AbxUz2sTQRT+ZnY226ipcZttwF9QW6IWiuLBi7vgQehBQYr2oEfP3ryIIIgHrXrQm39BteBBBQ8eFc9F8CLoRSPadJNUG9o0u9ns+MYQGjyks9Dtst/Omzffvo/vvWU5q3pLrO7VCSus5v0m/GFVd5XQoLjBfG+NVRXcdea7TcIG870WW3YD5rshrW1CxHwvYhU3ZpUzHf7x9Fdj7thV/HdxaRsj0hY2YZ8cEXnCXlkwhwk5inPSEbtlQcHcJR0zSxiSjrDkqJmRjmnSKgiGdIQhiyaTxQyPj2bH4/P528b90ky/Hu/fbFuc5UxOWKX4on1XzE1M9+qmI6aqD3Eux6zJzkzhgbhX8lQqPTFVXQketqY6s/Zj8+HxUxwSTOVTgxI8aJ2MZvOPeMpSXQ9D3JD7rRO8u9uBZ4ZxEku3i/029Gf2uQ48KQMfmkArAJ79Ap5S7nvUX29gTM4Gnm8elhvASx/4tAGEbeBdDXhDOT/e5GwR6YtFVHStAwQS9AUDTYrXKRfRfguR3rESSzA0Eni1BNykdi6Sw14VzVWJaVIVjcSWW8AXElolVyqVAAnFBHC2AFwvApNWApkuNaEY0cf3AO4wMErC3RraTw4pE8yM6gqiZ0iUbtoluvVfmXKAW2PAOXKWpRZeOwTcoNwRfYdc+994IAdcoHmpWWVMaqUNTFPOMbTdcW2mQe2ziK7aqF5SrcxQjlJqqwOambY3nXoDOZz9DOJ/f4SBtO055GKh/p6VWzsiyNuLlcvm8/pb9iPopO2Q40VjJQzCS+Z87XXaDrvf0p1vrTAUV8R8bSFNwb8AAAD//22Kfz8AAAAGSURBVAMATVPCqJAn5XEAAAAASUVORK5CYII="/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="toast" id="toast"><span id="toast-icon">v</span><span id="toast-msg">Operation complete.</span></div>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">H</div>
+      <div class="logo-text">Hide<span>IT</span></div>
+    </div>
+    <div class="sidebar-node">
+      <div><div class="node-indicator"></div></div>
+      <div><div class="node-id">NODE_0x4F2</div><div class="node-sub">SECURE CONNECTION</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="switchModule('crypto')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a4 4 0 100 8A4 4 0 008 1zm0 6a2 2 0 110-4 2 2 0 010 4zm-5 5h10v2H3v-2z"/></svg>
+        Cipher Lab
+      </div>
+      <div class="nav-item" onclick="switchModule('stego')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 2h14v12H1V2zm2 2v8h10V4H3zm2 2h6v1H5V6zm0 2h4v1H5V8z"/></svg>
+        Signal Hide
+      </div>
+      <div class="nav-item" onclick="switchModule('dual')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0L0 4v4c0 4.4 3.4 8.5 8 9.5C12.6 16.5 16 12.4 16 8V4L8 0zm0 2.2l6 2.7V8c0 3.5-2.7 6.8-6 7.7C4.7 14.8 2 11.5 2 8V4.9l6-2.7z"/></svg>
+        Dual-Lock
+      </div>
+
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-new-session" onclick="clearSession()">NEW SESSION</button>
+      <div style="margin-top:10px;font-family:var(--font-mono);font-size:9px;color:var(--text-dim);letter-spacing:0.06em">Settings</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-tabs">
+        <div class="topbar-tab active" id="tab-crypto" onclick="switchModule('crypto')">Cryptography</div>
+        <div class="topbar-tab" id="tab-stego" onclick="switchModule('stego')">Steganography</div>
+        <div class="topbar-tab" id="tab-dual" onclick="switchModule('dual')">Dual-Lock</div>
+      </div>
+      <div class="topbar-right">
+        <div class="status-pill">SYSTEM OPERATIONAL</div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- CRYPTO MODULE -->
+      <div class="module active grid-bg" id="module-crypto">
+        <div class="module-header">
+          <div class="module-title-wrap">
+            <div class="module-badge"><span class="dot"></span> CORE_ALPHA</div>
+            <div class="module-title">Cryptography Module</div>
+            <div class="module-desc">High-performance encryption and decryption engine. Classical and modern cipher support.</div>
+          </div>
+        </div>
+        <div class="panel-grid-left">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="panel">
+              <div class="panel-label">SELECT_ALGORITHM</div>
+              <div class="algo-list">
+                <div class="algo-item selected" onclick="selectAlgo(this,'aes')" data-algo="aes">AES-256 (CBC)</div>
+                <div class="algo-item" onclick="selectAlgo(this,'caesar')" data-algo="caesar">CAESAR_CIPHER</div>
+                <div class="algo-item" onclick="selectAlgo(this,'vigenere')" data-algo="vigenere">VIGENERE_FIELD</div>
+                <div class="algo-item" onclick="selectAlgo(this,'affine')" data-algo="affine">AFFINE_TRANSFORM</div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-label">OPERATION_MODE</div>
+              <div class="mode-toggle">
+                <button class="mode-btn active-mode" id="mode-enc" onclick="setMode('encrypt')">ENCRYPT</button>
+                <button class="mode-btn" id="mode-dec" onclick="setMode('decrypt')">DECRYPT</button>
+              </div>
+            </div>
+            <div class="panel" id="key-panel-aes">
+              <div class="panel-label">SECURE_PASSPHRASE</div>
+              <div class="field-wrap"><input type="password" id="aes-key" placeholder="ENTER AES KEY"/></div>
+            </div>
+            <div class="panel" id="key-panel-caesar" style="display:none">
+              <div class="panel-label">SHIFT_KEY (1-25)</div>
+              <div class="field-wrap"><input type="number" id="caesar-key" value="3" min="1" max="25"/></div>
+            </div>
+            <div class="panel" id="key-panel-vigenere" style="display:none">
+              <div class="panel-label">KEYWORD</div>
+              <div class="field-wrap"><input type="text" id="vigenere-key" value="KEY" placeholder="ENTER KEYWORD"/></div>
+            </div>
+            <div class="panel" id="key-panel-affine" style="display:none">
+              <div class="panel-label">AFFINE PARAMETERS</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div class="field-wrap">
+                  <div class="field-label">Multiplier A</div>
+                  <select id="affine-a"><option>1</option><option>3</option><option>5</option><option selected>7</option><option>9</option><option>11</option><option>15</option><option>17</option><option>19</option><option>21</option><option>23</option><option>25</option></select>
+                </div>
+                <div class="field-wrap">
+                  <div class="field-label">Shift B (0-25)</div>
+                  <input type="number" id="affine-b" value="8" min="0" max="25"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="panel accent-green">
+              <div class="panel-label">BUFFER_INPUT <span id="char-count">CHARS: 0</span></div>
+              <textarea id="crypto-input" placeholder="// Paste or type your payload here..." oninput="updateCharCount()"></textarea>
+            </div>
+            <button class="btn-primary" onclick="executeCrypto()">EXECUTE_TRANSFORM</button>
+            <div class="panel">
+              <div class="panel-label">SYSTEM_OUTPUT <button class="btn-secondary" onclick="clearCryptoLogs()" style="padding:2px 8px;font-size:9px">CLEAR_LOGS</button></div>
+              <div class="terminal" id="crypto-terminal">
+                <div class="log-line"><span class="log-time">[BOOT]</span><span class="log-text">SYSTEM READY. NODE_0x4F2_ACTIVE.</span></div>
+                <div class="log-line"><span class="log-time">[INIT]</span><span class="log-text">AWAITING COMMAND...</span></div>
+              </div>
+              <div style="margin-top:12px">
+                <div class="panel-label">TRANSFORM_RESULT</div>
+                <div class="result-box" id="crypto-result">
+                  <button class="result-copy" onclick="copyResult('crypto-result-text')">COPY</button>
+                  <span id="crypto-result-text" style="opacity:0.4;font-size:11px">-- awaiting transform --</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEGANOGRAPHY MODULE -->
+      <div class="module grid-bg" id="module-stego">
+        <div class="module-header">
+          <div class="module-title-wrap">
+            <div class="module-badge"><span class="dot"></span> SIGNAL_HIDE</div>
+            <div class="module-title">Signal Hide Module</div>
+            <div class="module-desc">LSB-based spatial domain steganography engine. Embed and extract hidden data in images.</div>
+          </div>
+          <div class="status-pill" style="color:var(--blue);border-color:#004f60;background:rgba(0,209,255,0.06)">ENCRYPT_READY</div>
+        </div>
+        <div class="panel-grid-2 section-gap">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="panel">
+              <div class="panel-label">OPERATION MODE</div>
+              <div class="mode-toggle">
+                <button class="mode-btn active-mode" id="stego-embed-btn" onclick="setStegoMode('embed')">EMBED</button>
+                <button class="mode-btn" id="stego-extract-btn" onclick="setStegoMode('extract')">EXTRACT</button>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-label">COVER IMAGE</div>
+              <div class="drop-zone" id="cover-drop" ondrop="handleDrop(event,'cover')" ondragover="dragOver(event)" ondragleave="dragLeave(event)">
+                <input type="file" id="cover-file-input" accept="image/*" onchange="handleFile(this,'cover')"/>
+                <div id="cover-preview-wrap">
+                  <div class="drop-zone-icon">^</div>
+                  <div class="drop-zone-text">Drag and drop PNG/JPG</div>
+                  <div class="drop-zone-sub">MAX: 12MB</div>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-label">ENCODING LOGIC</div>
+              <div class="field-wrap">
+                <div class="field-label">EMBEDDING METHOD</div>
+                <select id="lsb-method"><option value="sequential">LSB SEQUENTIAL</option><option value="random">LSB RANDOM (KEY-SEEDED)</option></select>
+              </div>
+              <div class="checkbox-wrap">
+                <input type="checkbox" id="use-xor"/>
+                <label class="checkbox-label" for="use-xor">ENABLE XOR MASKING</label>
+              </div>
+              <div class="field-wrap" style="margin-top:10px">
+                <div class="field-label">STEGO KEY / SEED</div>
+                <input type="password" id="stego-key" placeholder="REQUIRED FOR RANDOM / XOR"/>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="panel accent-blue" id="stego-payload-panel">
+              <div class="panel-label">SECRET PAYLOAD <span id="stego-byte-count">0 / 4096 BYTES</span></div>
+              <textarea id="stego-input" placeholder="Enter sensitive data to embed..." oninput="updateStegoBytes()" style="color:var(--green);background:rgba(0,255,65,0.02)"></textarea>
+            </div>
+            <div class="panel">
+              <div class="panel-label">VISUAL DELTA VERIFICATION</div>
+              <div class="img-compare" id="img-compare" style="display:none">
+                <div class="img-compare-item">
+                  <div class="img-compare-label">SOURCE_ORIGIN</div>
+                  <img id="orig-preview" src="" alt=""/>
+                </div>
+                <div class="img-compare-item">
+                  <div class="img-compare-label green">STEGO_RESULT <span class="img-badge encrypted" id="stego-badge" style="display:none">EMBEDDED</span></div>
+                  <img id="stego-preview" src="" alt="" style="opacity:0.3"/>
+                </div>
+              </div>
+              <div id="stego-placeholder" style="padding:20px;text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--text-dim)">Upload image to begin analysis</div>
+              <div class="metric-grid" id="stego-metrics" style="display:none">
+                <div class="metric-card"><div class="metric-label">MSE</div><div class="metric-value blue" id="mse-val">--</div></div>
+                <div class="metric-card"><div class="metric-label">PSNR (dB)</div><div class="metric-value" id="psnr-val">--</div></div>
+                <div class="metric-card"><div class="metric-label">SSIM</div><div class="metric-value yellow" id="ssim-val">--</div></div>
+              </div>
+            </div>
+            <div class="panel" id="extract-result-panel" style="display:none">
+              <div class="panel-label">EXTRACTED PAYLOAD</div>
+              <div class="result-box blue">
+                <button class="result-copy" onclick="copyResult('extract-result-text')" style="color:var(--blue)">COPY</button>
+                <span id="extract-result-text" style="opacity:0.4">-- awaiting extraction --</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:4px">
+          <button class="btn-primary" style="flex:1" id="stego-action-btn" onclick="executeStego()">EXECUTE EMBEDDING</button>
+          <button class="btn-secondary" id="stego-download-btn" style="display:none;min-width:160px" onclick="downloadStegoImage()">DOWNLOAD</button>
+        </div>
+      </div>
+
+      <!-- DUAL-LOCK MODULE -->
+      <div class="module grid-bg" id="module-dual">
+        <div class="module-header">
+          <div class="module-title-wrap">
+            <div class="module-badge"><span class="dot"></span> DUAL-LOCK</div>
+            <div class="module-title">Dual-Lock Pipeline</div>
+            <div class="module-desc">AES-256 encryption then Random LSB steganography. Two-layer hardened data encapsulation.</div>
+          </div>
+        </div>
+        <div class="pipeline-visual section-gap">
+          <div class="pipeline-step"><div class="pipeline-step-icon">P</div><div class="pipeline-step-label">PLAINTEXT</div><div class="pipeline-step-sub">RAW INPUT</div></div>
+          <div class="pipeline-arrow">&rarr;</div>
+          <div class="pipeline-step active-step"><div class="pipeline-step-icon">E</div><div class="pipeline-step-label">AES-256</div><div class="pipeline-step-sub">LAYER 01 ENCRYPTION</div></div>
+          <div class="pipeline-arrow">&rarr;</div>
+          <div class="pipeline-step active-step"><div class="pipeline-step-icon">I</div><div class="pipeline-step-label">LSB EMBED</div><div class="pipeline-step-sub">LAYER 02 STEGO</div></div>
+          <div class="pipeline-arrow">&rarr;</div>
+          <div class="pipeline-step"><div class="pipeline-step-icon">O</div><div class="pipeline-step-label">OUTPUT</div><div class="pipeline-step-sub">STEGO ARTIFACT</div><div class="pipeline-status ready" id="pipeline-status">STATUS: READY</div></div>
+        </div>
+        <div class="panel-grid-2 section-gap">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="panel">
+              <div class="panel-label">PIPELINE OPERATION</div>
+              <div class="mode-toggle">
+                <button class="mode-btn active-mode" id="dual-encode-btn" onclick="setDualMode('encode')">ENCODE PIPELINE</button>
+                <button class="mode-btn" id="dual-decode-btn" onclick="setDualMode('decode')">DECODE PIPELINE</button>
+              </div>
+            </div>
+            <div class="panel" id="dual-plaintext-panel">
+              <div class="panel-label">SECRET PAYLOAD (PLAINTEXT)</div>
+              <textarea id="dual-plaintext" placeholder="Enter the secret message to encrypt and hide..." style="min-height:80px"></textarea>
+            </div>
+            <div class="panel">
+              <div class="panel-label">MASTER SECURITY KEY</div>
+              <div class="field-wrap"><input type="password" id="dual-password" placeholder="ENTER_CIPHER_PHRASE" oninput="updateEntropy()"/></div>
+              <div class="field-label">KEY ENTROPY</div>
+              <div class="progress-bar"><div class="progress-bar-fill" id="entropy-bar" style="width:0%"></div></div>
+            </div>
+            <div class="panel" id="dual-cover-panel">
+              <div class="panel-label">COVER IMAGE</div>
+              <div class="drop-zone" id="dual-drop" ondrop="handleDrop(event,'dual')" ondragover="dragOver(event)" ondragleave="dragLeave(event)">
+                <input type="file" id="dual-file-input" accept="image/*" onchange="handleFile(this,'dual')"/>
+                <div id="dual-preview-wrap">
+                  <div class="drop-zone-icon">^</div>
+                  <div class="drop-zone-text">Drag and drop cover image</div>
+                  <div class="drop-zone-sub">PNG / JPG recommended</div>
+                </div>
+              </div>
+            </div>
+            <div class="panel" id="dual-stego-upload-panel" style="display:none">
+              <div class="panel-label">VAULT IMAGE (STEGO PNG)</div>
+              <div class="drop-zone" id="vault-drop" ondrop="handleDrop(event,'vault')" ondragover="dragOver(event)" ondragleave="dragLeave(event)">
+                <input type="file" id="vault-file-input" accept="image/png" onchange="handleFile(this,'vault')"/>
+                <div id="vault-preview-wrap">
+                  <div class="drop-zone-icon">L</div>
+                  <div class="drop-zone-text">Upload Vault PNG</div>
+                  <div class="drop-zone-sub">Must be exported from Dual-Lock Encode</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="panel" style="flex:1;position:relative">
+              <div class="panel-label">TERMINAL OUTPUT</div>
+              <div class="terminal" id="dual-terminal" style="min-height:200px;max-height:280px">
+                <div class="log-line"><span class="log-time">[SYS]</span><span class="log-text">DUAL-LOCK ENGINE v2.4.2 INITIALIZED.</span></div>
+                <div class="log-line"><span class="log-time">[SYS]</span><span class="log-text">PORT 0x32 SECURE CHANNEL OPEN.</span></div>
+                <div class="log-line"><span class="log-time">[SYS]</span><span class="log-text info">AWAITING MASTER KEY INPUT...</span></div>
+              </div>
+              <div class="loading-overlay" id="dual-loading">
+                <div style="width:160px;height:160px;border:1px solid var(--green);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;box-shadow:0 0 30px rgba(0,255,65,0.2)">
+                  <div style="font-size:28px">L</div>
+                  <div class="loading-text loading-dots">PROCESSING</div>
+                  <div style="width:120px"><div class="progress-bar"><div class="progress-bar-fill" id="dual-progress" style="width:0%"></div></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel" id="dual-result-section" style="display:none">
+              <div class="panel-label">OPERATION RESULT</div>
+              <div class="result-box" id="dual-result" style="display:none">
+                <button class="result-copy" onclick="copyResult('dual-result-text')">COPY</button>
+                <span id="dual-result-text"></span>
+              </div>
+              <div id="dual-image-result" style="display:none">
+                <div class="img-compare-item" style="margin-top:8px">
+                  <div class="img-compare-label green">VAULT_OUTPUT <span class="img-badge encrypted">DUAL-LOCKED</span></div>
+                  <img id="dual-result-img" src="" alt="" style="width:100%;max-height:150px;object-fit:contain"/>
+                </div>
+                <div class="metric-grid" id="dual-metrics" style="display:none">
+                  <div class="metric-card"><div class="metric-label">MSE</div><div class="metric-value blue" id="d-mse">--</div></div>
+                  <div class="metric-card"><div class="metric-label">PSNR</div><div class="metric-value" id="d-psnr">--</div></div>
+                  <div class="metric-card"><div class="metric-label">SSIM</div><div class="metric-value yellow" id="d-ssim">--</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:4px">
+          <button class="btn-primary" style="flex:1" id="dual-action-btn" onclick="executeDual()">EXECUTE DUAL-LOCK ENCODE</button>
+          <button class="btn-secondary" id="dual-download-btn" style="display:none;min-width:180px" onclick="downloadDualImage()">DOWNLOAD VAULT</button>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+
+    <footer class="statusbar">
+      <div class="statusbar-item"><div class="statusbar-dot"></div> SYSTEM_STATUS: <span class="val">OPERATIONAL</span></div>
+      <div class="statusbar-item">2026 HIDEIT TACTICAL</div>
+      <div class="statusbar-right">
+        <div class="statusbar-item">LATENCY: <span class="val" id="sb-latency">14MS</span></div>
+        <div class="statusbar-item">UPTIME: <span class="val">99.99%</span></div>
+        <div class="statusbar-item">ENCRYPTION: <span class="val" id="sb-algo">AES-256</span></div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
