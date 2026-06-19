@@ -181,7 +181,7 @@
           <div style="display:flex;flex-direction:column;gap:16px">
             <div class="panel accent-blue" id="stego-payload-panel">
               <div class="panel-label">SECRET PAYLOAD <span id="stego-byte-count">0 / 4096 BYTES</span></div>
-              <textarea id="stego-input" placeholder="Enter sensitive data to embed..." oninput="updateStegoBytes()" style="color:var(--green);background:rgba(0,255,65,0.02)"></textarea>
+              <textarea id="stego-input" placeholder="Enter sensitive data to embed..." oninput="updateStegoBytes()" onkeydown="if(event.key==='Enter'){event.preventDefault();}" style="color:var(--green);background:rgba(0,255,65,0.02)"></textarea>
             </div>
             <div class="panel">
               <div class="panel-label">VISUAL DELTA VERIFICATION</div>
@@ -246,7 +246,7 @@
             </div>
             <div class="panel" id="dual-plaintext-panel">
               <div class="panel-label">SECRET PAYLOAD (PLAINTEXT)</div>
-              <textarea id="dual-plaintext" placeholder="Enter the secret message to encrypt and hide..." style="min-height:80px"></textarea>
+              <textarea id="dual-plaintext" placeholder="Enter the secret message to encrypt and hide..." onkeydown="if(event.key==='Enter'){event.preventDefault();}" style="min-height:80px"></textarea>
             </div>
             <div class="panel">
               <div class="panel-label">MASTER SECURITY KEY</div>
