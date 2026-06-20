@@ -46,7 +46,7 @@ function clearSession() {
   try {
     // ── CRYPTO ──────────────────────────────────
     document.getElementById('crypto-input').value = '';
-    document.getElementById('aes-key').value = '';
+    resetPasswordField('aes-key');
     document.getElementById('caesar-key').value = 3;
     document.getElementById('vigenere-key').value = 'KEY';
     document.getElementById('affine-b').value = 8;
@@ -63,7 +63,7 @@ function clearSession() {
     coverImageData = null; coverImageFile = null; stegoResultCanvas = null;
 
     document.getElementById('stego-input').value = '';
-    document.getElementById('stego-key').value = '';
+    resetPasswordField('stego-key');
     document.getElementById('use-xor').checked = false;
     document.getElementById('lsb-method').selectedIndex = 0;
     document.getElementById('stego-byte-count').textContent = '0 / 4096 BYTES';
@@ -77,6 +77,7 @@ function clearSession() {
     document.getElementById('img-compare').style.display = 'none';
     document.getElementById('stego-placeholder').style.display = '';
     document.getElementById('stego-metrics').style.display = 'none';
+    document.getElementById('stego-histogram-panel').style.display = 'none';
     document.getElementById('stego-preview').src = '';
     document.getElementById('stego-preview').style.opacity = '0.3';
     document.getElementById('orig-preview').src = '';
@@ -86,6 +87,10 @@ function clearSession() {
     var exText = document.getElementById('extract-result-text');
     exText.textContent = '-- awaiting extraction --';
     exText.style.opacity = '0.4';
+
+    document.getElementById('stego-terminal').innerHTML = '';
+    logStego('SESSION CLEARED. NODE RESET.', 'warn');
+    logStego('SIGNAL HIDE ENGINE STANDBY. AWAITING COVER IMAGE...', 'info');
 
     setStegoMode('embed');
   } catch(e) { console.warn('Stego reset error:', e); }
@@ -97,7 +102,7 @@ function clearSession() {
     dualResultCanvas = null;
 
     document.getElementById('dual-plaintext').value = '';
-    document.getElementById('dual-password').value = '';
+    resetPasswordField('dual-password');
     document.getElementById('entropy-bar').style.width = '0%';
 
     // Reset file inputs (clone trick)
@@ -114,6 +119,7 @@ function clearSession() {
     document.getElementById('dual-result-text').textContent = '';
     document.getElementById('dual-image-result').style.display = 'none';
     document.getElementById('dual-metrics').style.display = 'none';
+    document.getElementById('dual-histogram-panel').style.display = 'none';
     document.getElementById('dual-loading').classList.remove('show');
     document.getElementById('dual-progress').style.width = '0%';
 
@@ -165,6 +171,38 @@ function logCrypto(msg, cls) {
   term.appendChild(line); term.scrollTop = term.scrollHeight;
 }
 function pad(n){ return String(n).padStart(2,'0'); }
+function togglePasswordVisibility(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var revealed = el.type === 'password';
+  el.type = revealed ? 'text' : 'password';
+  btn.classList.toggle('revealed', revealed);
+}
+function resetPasswordField(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.value = '';
+  el.type = 'password';
+  var wrap = el.closest('.pw-wrap');
+  if (wrap) {
+    var btn = wrap.querySelector('.pw-toggle');
+    if (btn) btn.classList.remove('revealed');
+  }
+}
+function logStego(msg, cls) {
+  cls = cls||'';
+  var t = new Date();
+  var ts = '['+pad(t.getHours())+':'+pad(t.getMinutes())+':'+pad(t.getSeconds())+']';
+  var term = document.getElementById('stego-terminal');
+  if (!term) return;
+  var line = document.createElement('div'); line.className = 'log-line';
+  line.innerHTML = '<span class="log-time">'+ts+'</span><span class="log-text '+cls+'">'+msg+'</span>';
+  term.appendChild(line); term.scrollTop = term.scrollHeight;
+}
+function clearStegoLogs() {
+  document.getElementById('stego-terminal').innerHTML = '';
+  logStego('LOGS CLEARED.', 'muted');
+}
 function copyResult(id) {
   var el = document.getElementById(id);
   navigator.clipboard.writeText(el.textContent||el.innerText).then(function(){ showToast('Copied to clipboard.','info'); });
@@ -269,7 +307,11 @@ function setStegoMode(mode) {
   document.getElementById('stego-extract-btn').classList.toggle('active-mode', mode==='extract');
   document.getElementById('stego-payload-panel').style.display = mode==='embed' ? '' : 'none';
   document.getElementById('stego-action-btn').textContent = mode==='embed' ? 'EXECUTE EMBEDDING' : 'EXECUTE EXTRACTION';
+  document.getElementById('stego-result-item').style.display = mode==='embed' ? '' : 'none';
   document.getElementById('extract-result-panel').style.display = mode==='extract' ? '' : 'none';
+  document.getElementById('stego-metrics').style.display = 'none';
+  if(mode==='extract') document.getElementById('stego-histogram-panel').style.display='none';
+  logStego('MODE SWITCH -> '+mode.toUpperCase()+' SELECTED.', 'info');
 }
 function updateStegoBytes() {
   var len = new TextEncoder().encode(document.getElementById('stego-input').value).length;
@@ -295,6 +337,7 @@ function loadDroppedFile(file, target) {
         document.getElementById('orig-preview').src=src;
         document.getElementById('img-compare').style.display='grid';
         document.getElementById('stego-placeholder').style.display='none';
+        logStego('COVER IMAGE LOADED: '+file.name+' ('+img.width+'x'+img.height+').');
       } else if(target==='dual'){
         dualImageData=imgData; dualImageFile=file;
         showImagePreview('dual-preview-wrap',src,'dual');
@@ -319,12 +362,14 @@ function clearImage(target) {
     document.getElementById('img-compare').style.display='none';
     document.getElementById('stego-placeholder').style.display='';
     document.getElementById('stego-metrics').style.display='none';
+    document.getElementById('stego-histogram-panel').style.display='none';
     document.getElementById('stego-preview').src='';
     document.getElementById('stego-preview').style.opacity='0.3';
     document.getElementById('orig-preview').src='';
     document.getElementById('stego-badge').style.display='none';
     document.getElementById('stego-download-btn').style.display='none';
     showToast('Cover image removed.','info');
+    logStego('COVER IMAGE REMOVED.', 'warn');
   } else if(target==='dual'){
     dualImageData=null; dualImageFile=null; dualResultCanvas=null;
     resetFileInput('dual-file-input');
@@ -333,6 +378,7 @@ function clearImage(target) {
     document.getElementById('dual-download-btn').style.display='none';
     document.getElementById('dual-image-result').style.display='none';
     document.getElementById('dual-metrics').style.display='none';
+    document.getElementById('dual-histogram-panel').style.display='none';
     showToast('Cover image removed.','info');
   } else if(target==='vault'){
     vaultImageData=null; vaultImageFile=null;
@@ -397,15 +443,148 @@ function calculateMetrics(orig, stego) {
   var ssim=((2*mu1*mu2+C1)*(2*s12+C2))/((mu1*mu1+mu2*mu2+C1)*(s1*s1+s2*s2+C2));
   return {mse:mse.toFixed(5),psnr:psnr.toFixed(2),ssim:Math.min(1,Math.abs(ssim)).toFixed(6)};
 }
+
+// HISTOGRAM COMPARISON
+function computeChannelHistograms(imgData) {
+  var d=imgData.data;
+  var r=new Array(256).fill(0), g=new Array(256).fill(0), b=new Array(256).fill(0);
+  for(var i=0;i<d.length;i+=4){ r[d[i]]++; g[d[i+1]]++; b[d[i+2]]++; }
+  return {r:r,g:g,b:b};
+}
+function niceCeilStep(value) {
+  if(value<=0) return 1;
+  var exp=Math.floor(Math.log10(value));
+  var mag=Math.pow(10,exp);
+  var residual=value/mag;
+  var nice;
+  if(residual<=1.5) nice=1; else if(residual<=3.5) nice=2; else if(residual<=7.5) nice=5; else nice=10;
+  return nice*mag;
+}
+function formatTickValue(v) {
+  if(v>=1000){
+    var k=v/1000;
+    return (k%1===0?k:k.toFixed(1))+'K';
+  }
+  if(v>0 && v%1!==0) return v.toFixed(2);
+  return String(Math.round(v));
+}
+function drawHistogramCanvas(canvas, hist, color, titleText) {
+  var ctx=canvas.getContext('2d');
+  var dpr=window.devicePixelRatio||1;
+  var cssW=canvas.clientWidth||canvas.width, cssH=canvas.clientHeight||canvas.height;
+  canvas.width=cssW*dpr; canvas.height=cssH*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  var w=cssW, h=cssH;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='rgba(255,255,255,0.015)';
+  ctx.fillRect(0,0,w,h);
+
+  var padL=58, padB=42, padT=26, padR=16;
+  var plotW=w-padL-padR, plotH=h-padT-padB;
+
+  var maxVal=0; for(var i=0;i<256;i++) if(hist[i]>maxVal) maxVal=hist[i];
+  if(maxVal===0) maxVal=1;
+  var step=niceCeilStep(maxVal/4);
+  var yTicks=[]; for(var t=0;t*step<=maxVal+step*0.001;t++) yTicks.push(t*step);
+  if(yTicks.length<2) yTicks.push(step);
+  var scaleMax=Math.max(maxVal,yTicks[yTicks.length-1])*1.04;
+
+  // chart title (inside canvas, like reference image)
+  ctx.fillStyle=color;
+  ctx.font='bold 12px "JetBrains Mono", monospace';
+  ctx.textAlign='center';
+  ctx.fillText(titleText, padL+plotW/2, 16);
+
+  // gridlines (vertical - pixel value ticks)
+  var xTicks=[0,50,100,150,200,250];
+  ctx.strokeStyle='rgba(0,209,255,0.18)';
+  ctx.lineWidth=1;
+  xTicks.forEach(function(xv){
+    var x=padL+(plotW*xv/255);
+    ctx.beginPath(); ctx.moveTo(x,padT); ctx.lineTo(x,padT+plotH); ctx.stroke();
+  });
+  // gridlines (horizontal - frequency ticks)
+  yTicks.forEach(function(yv){
+    var y=padT+plotH-(yv/scaleMax)*plotH;
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+plotW,y); ctx.stroke();
+  });
+
+  // axes
+  ctx.strokeStyle='rgba(255,255,255,0.3)';
+  ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+plotH); ctx.lineTo(padL+plotW,padT+plotH); ctx.stroke();
+
+  // y tick labels (compact "K" notation prevents overlap with the rotated axis title)
+  ctx.fillStyle='rgba(255,255,255,0.55)';
+  ctx.font='10px "JetBrains Mono", monospace';
+  ctx.textAlign='right';
+  ctx.textBaseline='middle';
+  yTicks.forEach(function(yv){
+    var y=padT+plotH-(yv/scaleMax)*plotH;
+    ctx.fillText(formatTickValue(yv),padL-8,y);
+  });
+
+  // x tick labels
+  ctx.textAlign='center';
+  ctx.textBaseline='alphabetic';
+  xTicks.forEach(function(xv){
+    var x=padL+(plotW*xv/255);
+    ctx.fillText(String(xv),x,padT+plotH+16);
+  });
+
+  // axis titles
+  ctx.fillStyle='rgba(255,255,255,0.4)';
+  ctx.font='10px "JetBrains Mono", monospace';
+  ctx.textAlign='center';
+  ctx.fillText('PIXEL VALUE', padL+plotW/2, h-6);
+  ctx.save();
+  ctx.translate(14,padT+plotH/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText('FREQUENCY',0,0);
+  ctx.restore();
+
+  // histogram curve
+  ctx.beginPath();
+  for(var i=0;i<256;i++){
+    var x=padL+(plotW*i/255);
+    var y=padT+plotH-(hist[i]/scaleMax)*plotH;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle=color; ctx.lineWidth=1.6; ctx.lineJoin='round'; ctx.stroke();
+  ctx.lineTo(padL+plotW,padT+plotH); ctx.lineTo(padL,padT+plotH); ctx.closePath();
+  ctx.globalAlpha=0.14; ctx.fillStyle=color; ctx.fill(); ctx.globalAlpha=1;
+}
+function renderHistogramComparison(origImgData, stegoImgData, containerId, panelId) {
+  var container=document.getElementById(containerId);
+  if(!container) return;
+  if(panelId) document.getElementById(panelId).style.display='';
+  container.innerHTML='';
+  var origHist=computeChannelHistograms(origImgData);
+  var stegoHist=computeChannelHistograms(stegoImgData);
+  var rows=[{title:'Original',hist:origHist},{title:'Steganography',hist:stegoHist}];
+  var channels=[{key:'r',color:'#FF4141',label:'Channel R'},{key:'g',color:'#00FF41',label:'Channel G'},{key:'b',color:'#00D1FF',label:'Channel B'}];
+  rows.forEach(function(row){
+    channels.forEach(function(ch){
+      var cell=document.createElement('div');
+      cell.className='hist-cell';
+      var canvas=document.createElement('canvas');
+      canvas.className='hist-canvas';
+      cell.appendChild(canvas);
+      container.appendChild(cell);
+      drawHistogramCanvas(canvas, row.hist[ch.key], ch.color, row.title+' - '+ch.label);
+    });
+  });
+}
 function executeStego() {
   if(currentStegoMode==='embed'){
-    if(!coverImageData){showToast('Upload a cover image first.','error');return;}
+    if(!coverImageData){showToast('Upload a cover image first.','error');logStego('ERROR: NO COVER IMAGE LOADED.','error');return;}
     var msg=document.getElementById('stego-input').value;
-    if(!msg){showToast('Enter secret payload.','error');return;}
+    if(!msg){showToast('Enter secret payload.','error');logStego('ERROR: PAYLOAD EMPTY.','error');return;}
     var method=document.getElementById('lsb-method').value;
     var useXor=document.getElementById('use-xor').checked;
     var key=document.getElementById('stego-key').value;
-    if((method==='random'||useXor)&&!key){showToast('Key/seed required for Random/XOR mode.','error');return;}
+    if((method==='random'||useXor)&&!key){showToast('Key/seed required for Random/XOR mode.','error');logStego('ERROR: KEY/SEED REQUIRED.','error');return;}
+    logStego('INITIATING EMBED -> METHOD: '+method.toUpperCase()+(useXor?' + XOR':'')+'.');
     try {
       var t0=performance.now();
       var stegoData=lsbEmbed(coverImageData,msg,key,method==='random',useXor);
@@ -423,25 +602,29 @@ function executeStego() {
       document.getElementById('stego-preview').style.opacity='1';
       document.getElementById('stego-badge').style.display='inline-block';
       document.getElementById('stego-download-btn').style.display='';
+      renderHistogramComparison(coverImageData, stegoData, 'stego-histogram', 'stego-histogram-panel');
+      logStego('EMBEDDING COMPLETE. ELAPSED: '+elapsed+'ms | PSNR: '+m.psnr+'dB | SSIM: '+m.ssim+'.');
       showToast('Embedding complete in '+elapsed+'ms. PSNR: '+m.psnr+'dB','success');
-    } catch(e){showToast(e.message,'error');}
+    } catch(e){showToast(e.message,'error');logStego('ERROR: '+e.message,'error');}
   } else {
-    if(!coverImageData){showToast('Upload a stego image first.','error');return;}
+    if(!coverImageData){showToast('Upload a stego image first.','error');logStego('ERROR: NO STEGO IMAGE LOADED.','error');return;}
     var method=document.getElementById('lsb-method').value;
     var useXor=document.getElementById('use-xor').checked;
     var key=document.getElementById('stego-key').value;
+    logStego('INITIATING EXTRACTION -> METHOD: '+method.toUpperCase()+(useXor?' + XOR':'')+'.');
     try {
       var extracted=lsbExtract(coverImageData,key,method==='random',useXor);
       var et=document.getElementById('extract-result-text');
       et.textContent=extracted; et.style.opacity='1';
-      if(extracted.startsWith('[Error]')) showToast(extracted,'error');
-      else showToast('Extraction complete.','success');
-    } catch(e){showToast(e.message,'error');}
+      if(extracted.startsWith('[Error]')){ showToast(extracted,'error'); logStego(extracted,'error'); }
+      else { showToast('Extraction complete.','success'); logStego('EXTRACTION COMPLETE. LENGTH: '+extracted.length+' CHARS.'); }
+    } catch(e){showToast(e.message,'error');logStego('ERROR: '+e.message,'error');}
   }
 }
 function downloadStegoImage() {
   if(!stegoResultCanvas) return;
   var a=document.createElement('a'); a.download='stego_result.png'; a.href=stegoResultCanvas.toDataURL('image/png'); a.click();
+  logStego('VAULT IMAGE EXPORTED: stego_result.png');
 }
 
 // DUAL-LOCK
@@ -452,6 +635,7 @@ function setDualMode(mode) {
   document.getElementById('dual-plaintext-panel').style.display=mode==='encode'?'':'none';
   document.getElementById('dual-cover-panel').style.display=mode==='encode'?'':'none';
   document.getElementById('dual-stego-upload-panel').style.display=mode==='decode'?'':'none';
+  document.getElementById('key-strength-wrap').style.display=mode==='encode'?'':'none';
   document.getElementById('dual-action-btn').textContent=mode==='encode'?'EXECUTE DUAL-LOCK ENCODE':'EXECUTE DUAL-LOCK DECODE';
   document.getElementById('dual-download-btn').style.display='none';
   document.getElementById('dual-result-section').style.display='none';
@@ -504,9 +688,11 @@ async function executeDual() {
       document.getElementById('d-psnr').textContent=m.psnr+' dB';
       document.getElementById('d-ssim').textContent=m.ssim;
       document.getElementById('dual-metrics').style.display='grid';
+      document.getElementById('dual-result').style.display='none';
       document.getElementById('dual-image-result').style.display='';
       document.getElementById('dual-result-section').style.display='';
       document.getElementById('dual-download-btn').style.display='';
+      renderHistogramComparison(dualImageData, stegoData, 'dual-histogram', 'dual-histogram-panel');
       logDual('DUAL-LOCK ENCODE PIPELINE: SUCCESS');
       showToast('Dual-Lock encoding complete!','success');
     } catch(e){ logDual('ERROR: '+e.message,'error'); showToast(e.message,'error'); }
@@ -531,6 +717,7 @@ async function executeDual() {
     document.getElementById('dual-result').style.display='';
     document.getElementById('dual-image-result').style.display='none';
     document.getElementById('dual-metrics').style.display='none';
+    document.getElementById('dual-histogram-panel').style.display='none';
     document.getElementById('dual-result-section').style.display='';
     logDual('DUAL-LOCK DECODE PIPELINE: SUCCESS');
     showToast('Message successfully recovered!','success');
