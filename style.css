@@ -50,6 +50,21 @@
   .module-desc { font-size: 13px; color: var(--text-muted); margin-top: 6px; font-family: var(--font-mono); }
   .panel-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .panel-grid-left { display: grid; grid-template-columns: 360px 1fr; gap: 16px; }
+  .panel-grid-stego { display: grid; grid-template-columns: 300px 1fr; gap: 16px; align-items: start; }
+  .panel-compact { padding: 12px; }
+  .panel-compact .panel-label { margin-bottom: 8px; font-size: 9px; }
+  .panel-compact textarea { min-height: 70px; font-size: 11px; }
+  .drop-zone-compact { padding: 16px 10px; min-height: 90px; }
+  .drop-zone-compact .drop-zone-icon { font-size: 18px; margin-bottom: 4px; }
+  .drop-zone-compact .drop-zone-text { font-size: 10px; }
+  .drop-zone-compact .drop-zone-sub { font-size: 9px; }
+  .drop-zone-compact .preview-img { max-height: 80px; }
+  .panel-visual-delta { flex: 1; }
+  .img-compare-large { grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; align-items: stretch; }
+  .img-compare-large .img-compare-item { padding: 14px; }
+  .img-compare-large .img-compare-item img { max-height: 420px; min-height: 200px; }
+  .img-compare-large .img-compare-label { font-size: 11px; margin-bottom: 10px; }
+  .img-compare-large .result-box { flex: 1; min-height: 200px; max-height: 420px; overflow-y: auto; }
   .panel { background: var(--surface-0); border: 1px solid var(--border); padding: 16px; position: relative; }
   .panel::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--surface-2); }
   .panel.accent-green::before { background: var(--green); box-shadow: 0 0 8px rgba(0,255,65,0.4); }
@@ -74,6 +89,14 @@
   textarea { min-height: 120px; }
   select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; cursor: pointer; }
   input[type="number"] { -moz-appearance: textfield; }
+  .pw-wrap { position: relative; }
+  .pw-wrap input[type="password"], .pw-wrap input[type="text"] { padding-right: 38px; }
+  .pw-toggle { position: absolute; top: 0; right: 0; height: 100%; width: 36px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; padding: 0; margin: 0; line-height: 0; cursor: pointer; color: var(--text-dim); transition: color 0.15s; }
+  .pw-toggle:hover { color: var(--green); }
+  .pw-toggle svg { width: 15px; height: 15px; display: block; flex-shrink: 0; }
+  .pw-toggle .icon-eye-off { display: none; }
+  .pw-toggle.revealed .icon-eye { display: none; }
+  .pw-toggle.revealed .icon-eye-off { display: block; }
   .checkbox-wrap { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 0; }
   .checkbox-wrap input[type="checkbox"] { width: 14px; height: 14px; background: var(--surface-1); border: 1px solid var(--border-mid); cursor: pointer; accent-color: var(--green); }
   .checkbox-label { font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
@@ -96,6 +119,9 @@
   .result-copy:hover { color: var(--green); border-color: var(--green); }
   .metric-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 14px; }
   .metric-card { background: var(--surface-1); border: 1px solid var(--border); padding: 12px; }
+  .hist-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .hist-cell { background: var(--surface-1); border: 1px solid var(--border); padding: 6px; }
+  .hist-canvas { width: 100%; height: 260px; display: block; }
   .metric-label { font-family: var(--font-mono); font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
   .metric-value { font-family: var(--font-mono); font-size: 18px; font-weight: 800; color: var(--green); letter-spacing: -0.02em; }
   .metric-value.blue { color: var(--blue); }
@@ -108,9 +134,10 @@
   .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
   .drop-zone .preview-img { max-width: 100%; max-height: 140px; object-fit: contain; }
   .img-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
-  .img-compare-item { background: var(--bg); border: 1px solid var(--border); padding: 8px; }
+  .img-compare-item { background: var(--bg); border: 1px solid var(--border); padding: 8px; display: flex; flex-direction: column; }
   .img-compare-label { font-family: var(--font-mono); font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
   .img-compare-label.green { color: var(--green); }
+  .img-compare-label.blue { color: var(--blue); }
   .img-compare-item img { width: 100%; max-height: 130px; object-fit: contain; }
   .img-badge { display: inline-block; padding: 1px 6px; font-family: var(--font-mono); font-size: 8px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-left: 6px; }
   .img-badge.encrypted { background: var(--green); color: #000; }
@@ -146,4 +173,4 @@
   .toast.toast-info { border-left: 3px solid var(--blue); }
   .btn-clear-img { position: absolute; top: 6px; right: 6px; padding: 3px 8px; background: rgba(255,65,65,0.1); border: 1px solid rgba(255,65,65,0.35); color: var(--red); font-family: var(--font-mono); font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.15s; z-index: 10; line-height: 1.4; }
   .btn-clear-img:hover { background: rgba(255,65,65,0.2); border-color: var(--red); box-shadow: 0 0 8px rgba(255,65,65,0.2); }
-  @media (max-width: 900px) { .sidebar { display: none; } .panel-grid-2, .panel-grid-left { grid-template-columns: 1fr; } .metric-grid { grid-template-columns: 1fr 1fr; } .pipeline-visual { flex-direction: column; } .pipeline-arrow { transform: rotate(90deg); } }
+  @media (max-width: 900px) { .sidebar { display: none; } .panel-grid-2, .panel-grid-left, .panel-grid-stego { grid-template-columns: 1fr; } .img-compare-large .img-compare-item img { max-height: 220px; min-height: 0; } .img-compare-large .result-box { min-height: 60px; max-height: none; flex: none; } .metric-grid { grid-template-columns: 1fr 1fr; } .hist-grid { grid-template-columns: 1fr; } .pipeline-visual { flex-direction: column; } .pipeline-arrow { transform: rotate(90deg); } }
