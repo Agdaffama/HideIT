@@ -368,13 +368,16 @@ function lsbExtract(imgData, key, useRandom, useXor) {
   var indices=Array.from({length:total},function(_,i){return i;});
   if(useRandom){ var seed=key?[...key].reduce(function(a,c){return a+c.charCodeAt(0);},0):42; seededShuffle(indices,seed); }
   var bits=[];
+  var tail='';
+  var found=false;
   for(var i=0;i<total;i++){
-    bits.push(String(data[indices[i]]&1));
-    if(bits.length>=16&&bits.length%16===0){
-      if(bits.slice(-16).join('')===EOF_DELIMITER){ bits=bits.slice(0,-16); break; }
-    }
+    var bit=String(data[indices[i]]&1);
+    bits.push(bit);
+    tail+=bit;
+    if(tail.length>16) tail=tail.slice(-16);
+    if(tail.length===16&&tail===EOF_DELIMITER){ bits=bits.slice(0,-16); found=true; break; }
   }
-  if(bits.length===0||bits.length%8!==0) return '[Error] Delimiter not found. Wrong image or key.';
+  if(!found||bits.length===0||bits.length%8!==0) return '[Error] Delimiter not found. Wrong image or key.';
   var result='';
   for(var i=0;i<bits.length;i+=8) result+=String.fromCharCode(parseInt(bits.slice(i,i+8).join(''),2));
   return useXor ? xorCipher(result,key) : result;
