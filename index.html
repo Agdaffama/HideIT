@@ -84,7 +84,13 @@
             </div>
             <div class="panel" id="key-panel-aes">
               <div class="panel-label">SECURE_PASSPHRASE</div>
-              <div class="field-wrap"><input type="password" id="aes-key" placeholder="ENTER AES KEY"/></div>
+              <div class="field-wrap pw-wrap">
+                <input type="password" id="aes-key" placeholder="ENTER AES KEY"/>
+                <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('aes-key', this)" aria-label="Toggle key visibility">
+                  <svg class="icon-eye" viewBox="0 0 16 16" fill="currentColor"><path d="M8 3C4.5 3 1.7 5.1 0.5 8c1.2 2.9 4 5 7.5 5s6.3-2.1 7.5-5C14.3 5.1 11.5 3 8 3zm0 8.3A3.3 3.3 0 1 1 8 4.7a3.3 3.3 0 0 1 0 6.6zm0-1.5A1.8 1.8 0 1 0 8 6.5a1.8 1.8 0 0 0 0 3.6z"/></svg>
+                  <svg class="icon-eye-off" viewBox="0 0 16 16" fill="currentColor"><path d="M2.3 1.3 1.3 2.3l2.1 2.1C2 5.4 1 6.6 0.5 8c1.2 2.9 4 5 7.5 5 1.2 0 2.4-.3 3.4-.7l2.4 2.4 1-1L2.3 1.3zM8 11.3c-.4 0-.8-.1-1.1-.2L5 9.2A3.3 3.3 0 0 1 8 4.7c.5 0 1 .1 1.4.3l-1 1A1.8 1.8 0 0 0 6.2 8.2l-1-1c-.1.3-.2.5-.2.8A3.3 3.3 0 0 0 8 11.3zm6.9-3.3c-.6-1.4-1.6-2.5-2.8-3.3l-1.1 1.1c.9.6 1.7 1.4 2.2 2.2-1.2 2-3.3 3.5-5.7 3.7l1.2 1.2c2.6-.5 4.9-2.2 6.2-4.9z"/></svg>
+                </button>
+              </div>
             </div>
             <div class="panel" id="key-panel-caesar" style="display:none">
               <div class="panel-label">SHIFT_KEY (1-25)</div>
@@ -142,18 +148,18 @@
           </div>
           <div class="status-pill" style="color:var(--blue);border-color:#004f60;background:rgba(0,209,255,0.06)">ENCRYPT_READY</div>
         </div>
-        <div class="panel-grid-2 section-gap">
-          <div style="display:flex;flex-direction:column;gap:16px">
-            <div class="panel">
+        <div class="panel-grid-stego section-gap">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="panel panel-compact">
               <div class="panel-label">OPERATION MODE</div>
               <div class="mode-toggle">
                 <button class="mode-btn active-mode" id="stego-embed-btn" onclick="setStegoMode('embed')">EMBED</button>
                 <button class="mode-btn" id="stego-extract-btn" onclick="setStegoMode('extract')">EXTRACT</button>
               </div>
             </div>
-            <div class="panel">
+            <div class="panel panel-compact">
               <div class="panel-label">COVER IMAGE</div>
-              <div class="drop-zone" id="cover-drop" ondrop="handleDrop(event,'cover')" ondragover="dragOver(event)" ondragleave="dragLeave(event)">
+              <div class="drop-zone drop-zone-compact" id="cover-drop" ondrop="handleDrop(event,'cover')" ondragover="dragOver(event)" ondragleave="dragLeave(event)">
                 <input type="file" id="cover-file-input" accept="image/*" onchange="handleFile(this,'cover')"/>
                 <div id="cover-preview-wrap">
                   <div class="drop-zone-icon">^</div>
@@ -162,7 +168,7 @@
                 </div>
               </div>
             </div>
-            <div class="panel">
+            <div class="panel panel-compact">
               <div class="panel-label">ENCODING LOGIC</div>
               <div class="field-wrap">
                 <div class="field-label">EMBEDDING METHOD</div>
@@ -174,42 +180,59 @@
               </div>
               <div class="field-wrap" style="margin-top:10px">
                 <div class="field-label">STEGO KEY / SEED</div>
-                <input type="password" id="stego-key" placeholder="REQUIRED FOR RANDOM / XOR"/>
+                <div class="pw-wrap">
+                  <input type="password" id="stego-key" placeholder="REQUIRED FOR RANDOM / XOR"/>
+                  <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('stego-key', this)" aria-label="Toggle key visibility">
+                    <svg class="icon-eye" viewBox="0 0 16 16" fill="currentColor"><path d="M8 3C4.5 3 1.7 5.1 0.5 8c1.2 2.9 4 5 7.5 5s6.3-2.1 7.5-5C14.3 5.1 11.5 3 8 3zm0 8.3A3.3 3.3 0 1 1 8 4.7a3.3 3.3 0 0 1 0 6.6zm0-1.5A1.8 1.8 0 1 0 8 6.5a1.8 1.8 0 0 0 0 3.6z"/></svg>
+                    <svg class="icon-eye-off" viewBox="0 0 16 16" fill="currentColor"><path d="M2.3 1.3 1.3 2.3l2.1 2.1C2 5.4 1 6.6 0.5 8c1.2 2.9 4 5 7.5 5 1.2 0 2.4-.3 3.4-.7l2.4 2.4 1-1L2.3 1.3zM8 11.3c-.4 0-.8-.1-1.1-.2L5 9.2A3.3 3.3 0 0 1 8 4.7c.5 0 1 .1 1.4.3l-1 1A1.8 1.8 0 0 0 6.2 8.2l-1-1c-.1.3-.2.5-.2.8A3.3 3.3 0 0 0 8 11.3zm6.9-3.3c-.6-1.4-1.6-2.5-2.8-3.3l-1.1 1.1c.9.6 1.7 1.4 2.2 2.2-1.2 2-3.3 3.5-5.7 3.7l1.2 1.2c2.6-.5 4.9-2.2 6.2-4.9z"/></svg>
+                  </button>
+                </div>
               </div>
+            </div>
+            <div class="panel panel-compact accent-blue" id="stego-payload-panel">
+              <div class="panel-label">SECRET PAYLOAD <span id="stego-byte-count">0 / 4096 BYTES</span></div>
+              <textarea id="stego-input" placeholder="Enter sensitive data to embed..." oninput="updateStegoBytes()" onkeydown="if(event.key==='Enter'){event.preventDefault();}" style="color:var(--green);background:rgba(0,255,65,0.02);min-height:70px"></textarea>
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:16px">
-            <div class="panel accent-blue" id="stego-payload-panel">
-              <div class="panel-label">SECRET PAYLOAD <span id="stego-byte-count">0 / 4096 BYTES</span></div>
-              <textarea id="stego-input" placeholder="Enter sensitive data to embed..." oninput="updateStegoBytes()" onkeydown="if(event.key==='Enter'){event.preventDefault();}" style="color:var(--green);background:rgba(0,255,65,0.02)"></textarea>
-            </div>
-            <div class="panel">
+            <div class="panel panel-visual-delta">
               <div class="panel-label">VISUAL DELTA VERIFICATION</div>
-              <div class="img-compare" id="img-compare" style="display:none">
+              <div class="img-compare img-compare-large" id="img-compare" style="display:none">
                 <div class="img-compare-item">
                   <div class="img-compare-label">SOURCE_ORIGIN</div>
                   <img id="orig-preview" src="" alt=""/>
                 </div>
-                <div class="img-compare-item">
+                <div class="img-compare-item" id="stego-result-item">
                   <div class="img-compare-label green">STEGO_RESULT <span class="img-badge encrypted" id="stego-badge" style="display:none">EMBEDDED</span></div>
                   <img id="stego-preview" src="" alt="" style="opacity:0.3"/>
                 </div>
+                <div class="img-compare-item" id="extract-result-panel" style="display:none">
+                  <div class="img-compare-label blue">EXTRACTED PAYLOAD</div>
+                  <div class="result-box blue" style="position:relative">
+                    <button class="result-copy" onclick="copyResult('extract-result-text')" style="color:var(--blue)">COPY</button>
+                    <span id="extract-result-text" style="opacity:0.4">-- awaiting extraction --</span>
+                  </div>
+                </div>
               </div>
-              <div id="stego-placeholder" style="padding:20px;text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--text-dim)">Upload image to begin analysis</div>
+              <div id="stego-placeholder" style="padding:60px 20px;text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--text-dim)">Upload image to begin analysis</div>
               <div class="metric-grid" id="stego-metrics" style="display:none">
                 <div class="metric-card"><div class="metric-label">MSE</div><div class="metric-value blue" id="mse-val">--</div></div>
                 <div class="metric-card"><div class="metric-label">PSNR (dB)</div><div class="metric-value" id="psnr-val">--</div></div>
                 <div class="metric-card"><div class="metric-label">SSIM</div><div class="metric-value yellow" id="ssim-val">--</div></div>
               </div>
             </div>
-            <div class="panel" id="extract-result-panel" style="display:none">
-              <div class="panel-label">EXTRACTED PAYLOAD</div>
-              <div class="result-box blue">
-                <button class="result-copy" onclick="copyResult('extract-result-text')" style="color:var(--blue)">COPY</button>
-                <span id="extract-result-text" style="opacity:0.4">-- awaiting extraction --</span>
+            <div class="panel">
+              <div class="panel-label">TERMINAL OUTPUT <button class="btn-secondary" onclick="clearStegoLogs()" style="padding:2px 8px;font-size:9px">CLEAR_LOGS</button></div>
+              <div class="terminal" id="stego-terminal">
+                <div class="log-line"><span class="log-time">[SYS]</span><span class="log-text">SIGNAL HIDE ENGINE INITIALIZED.</span></div>
+                <div class="log-line"><span class="log-time">[SYS]</span><span class="log-text info">AWAITING COVER IMAGE...</span></div>
               </div>
             </div>
           </div>
+        </div>
+        <div class="panel" id="stego-histogram-panel" style="display:none;margin-top:16px">
+          <div class="panel-label">HISTOGRAM COMPARISON: ORIGINAL VS STEGANOGRAPHY</div>
+          <div class="hist-grid" id="stego-histogram"></div>
         </div>
         <div style="display:flex;gap:12px;margin-top:4px">
           <button class="btn-primary" style="flex:1" id="stego-action-btn" onclick="executeStego()">EXECUTE EMBEDDING</button>
@@ -250,9 +273,17 @@
             </div>
             <div class="panel">
               <div class="panel-label">MASTER SECURITY KEY</div>
-              <div class="field-wrap"><input type="password" id="dual-password" placeholder="ENTER_CIPHER_PHRASE" oninput="updateEntropy()"/></div>
-              <div class="field-label">KEY ENTROPY</div>
-              <div class="progress-bar"><div class="progress-bar-fill" id="entropy-bar" style="width:0%"></div></div>
+              <div class="field-wrap pw-wrap">
+                <input type="password" id="dual-password" placeholder="ENTER_CIPHER_PHRASE" oninput="updateEntropy()"/>
+                <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('dual-password', this)" aria-label="Toggle key visibility">
+                  <svg class="icon-eye" viewBox="0 0 16 16" fill="currentColor"><path d="M8 3C4.5 3 1.7 5.1 0.5 8c1.2 2.9 4 5 7.5 5s6.3-2.1 7.5-5C14.3 5.1 11.5 3 8 3zm0 8.3A3.3 3.3 0 1 1 8 4.7a3.3 3.3 0 0 1 0 6.6zm0-1.5A1.8 1.8 0 1 0 8 6.5a1.8 1.8 0 0 0 0 3.6z"/></svg>
+                  <svg class="icon-eye-off" viewBox="0 0 16 16" fill="currentColor"><path d="M2.3 1.3 1.3 2.3l2.1 2.1C2 5.4 1 6.6 0.5 8c1.2 2.9 4 5 7.5 5 1.2 0 2.4-.3 3.4-.7l2.4 2.4 1-1L2.3 1.3zM8 11.3c-.4 0-.8-.1-1.1-.2L5 9.2A3.3 3.3 0 0 1 8 4.7c.5 0 1 .1 1.4.3l-1 1A1.8 1.8 0 0 0 6.2 8.2l-1-1c-.1.3-.2.5-.2.8A3.3 3.3 0 0 0 8 11.3zm6.9-3.3c-.6-1.4-1.6-2.5-2.8-3.3l-1.1 1.1c.9.6 1.7 1.4 2.2 2.2-1.2 2-3.3 3.5-5.7 3.7l1.2 1.2c2.6-.5 4.9-2.2 6.2-4.9z"/></svg>
+                </button>
+              </div>
+              <div id="key-strength-wrap">
+                <div class="field-label">KEY STRENGTH</div>
+                <div class="progress-bar"><div class="progress-bar-fill" id="entropy-bar" style="width:0%"></div></div>
+              </div>
             </div>
             <div class="panel" id="dual-cover-panel">
               <div class="panel-label">COVER IMAGE</div>
@@ -278,6 +309,24 @@
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="panel" id="dual-result-section" style="display:none">
+              <div class="panel-label">OPERATION RESULT</div>
+              <div class="result-box" id="dual-result" style="display:none">
+                <button class="result-copy" onclick="copyResult('dual-result-text')">COPY</button>
+                <span id="dual-result-text"></span>
+              </div>
+              <div id="dual-image-result" style="display:none">
+                <div class="img-compare-item" style="margin-top:8px">
+                  <div class="img-compare-label green">VAULT_OUTPUT <span class="img-badge encrypted">DUAL-LOCKED</span></div>
+                  <img id="dual-result-img" src="" alt="" style="width:100%;max-height:420px;min-height:320px;object-fit:contain"/>
+                </div>
+                <div class="metric-grid" id="dual-metrics" style="display:none">
+                  <div class="metric-card"><div class="metric-label">MSE</div><div class="metric-value blue" id="d-mse">--</div></div>
+                  <div class="metric-card"><div class="metric-label">PSNR</div><div class="metric-value" id="d-psnr">--</div></div>
+                  <div class="metric-card"><div class="metric-label">SSIM</div><div class="metric-value yellow" id="d-ssim">--</div></div>
+                </div>
+              </div>
+            </div>
             <div class="panel" style="flex:1;position:relative">
               <div class="panel-label">TERMINAL OUTPUT</div>
               <div class="terminal" id="dual-terminal" style="min-height:200px;max-height:280px">
@@ -293,25 +342,11 @@
                 </div>
               </div>
             </div>
-            <div class="panel" id="dual-result-section" style="display:none">
-              <div class="panel-label">OPERATION RESULT</div>
-              <div class="result-box" id="dual-result" style="display:none">
-                <button class="result-copy" onclick="copyResult('dual-result-text')">COPY</button>
-                <span id="dual-result-text"></span>
-              </div>
-              <div id="dual-image-result" style="display:none">
-                <div class="img-compare-item" style="margin-top:8px">
-                  <div class="img-compare-label green">VAULT_OUTPUT <span class="img-badge encrypted">DUAL-LOCKED</span></div>
-                  <img id="dual-result-img" src="" alt="" style="width:100%;max-height:150px;object-fit:contain"/>
-                </div>
-                <div class="metric-grid" id="dual-metrics" style="display:none">
-                  <div class="metric-card"><div class="metric-label">MSE</div><div class="metric-value blue" id="d-mse">--</div></div>
-                  <div class="metric-card"><div class="metric-label">PSNR</div><div class="metric-value" id="d-psnr">--</div></div>
-                  <div class="metric-card"><div class="metric-label">SSIM</div><div class="metric-value yellow" id="d-ssim">--</div></div>
-                </div>
-              </div>
-            </div>
           </div>
+        </div>
+        <div class="panel" id="dual-histogram-panel" style="display:none;margin-top:16px">
+          <div class="panel-label">HISTOGRAM COMPARISON: ORIGINAL VS STEGANOGRAPHY</div>
+          <div class="hist-grid" id="dual-histogram"></div>
         </div>
         <div style="display:flex;gap:12px;margin-top:4px">
           <button class="btn-primary" style="flex:1" id="dual-action-btn" onclick="executeDual()">EXECUTE DUAL-LOCK ENCODE</button>
