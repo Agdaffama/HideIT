@@ -1,6 +1,6 @@
 # HideIT — Tactical Cryptography & Steganography Platform
 
-HideIT adalah aplikasi web *single-page*, *client-side*, dan *self-contained* untuk eksperimen kriptografi klasik/modern serta steganografi LSB pada gambar. Seluruh proses (enkripsi, embedding, ekstraksi) berjalan **100% di browser** — tidak ada data yang dikirim ke server mana pun.
+HideIT adalah aplikasi web *single-page* dan *self-contained* untuk eksperimen kriptografi klasik/modern serta steganografi LSB pada gambar. Seluruh proses (enkripsi, embedding, ekstraksi) berjalan **100% di browser** tidak ada data yang dikirim ke server mana pun.
 
 Didesain dengan tema **"Tactical Technicalism"**: dark UI bergaya terminal/command-center, aksen *Terminal Green* & *Cipher Blue*, dan tipografi `JetBrains Mono`.
 
