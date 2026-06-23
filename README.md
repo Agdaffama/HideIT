@@ -167,4 +167,4 @@ Proyek pribadi/akademik. Sesuaikan lisensi (misalnya MIT) jika ingin dipublikasi
 
 ---
 
-<p align="center"><sub>HIDEIT TACTICAL © 2026 — SYSTEM_STATUS: OPERATIONAL</sub></p>
+<p align="center"><sub>HIDEIT TACTICAL © 2026</sub></p>
