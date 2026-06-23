@@ -18,8 +18,6 @@ Didesain dengan tema **"Tactical Technicalism"**: dark UI bergaya terminal/comma
 - [Detail Teknis](#detail-teknis)
 - [Batasan & Catatan Keamanan](#batasan--catatan-keamanan)
 - [Teknologi yang Digunakan](#teknologi-yang-digunakan)
-- [Lisensi](#lisensi)
-
 ---
 
 ## Fitur Utama
@@ -34,7 +32,6 @@ Didesain dengan tema **"Tactical Technicalism"**: dark UI bergaya terminal/comma
 - 🔁 **NEW SESSION**: reset penuh seluruh state, input, dan preview di semua modul dengan satu klik
 - 👁️ **Toggle visibility** password/key di semua input sensitif
 - 💾 **Export hasil**: download gambar stego (`stego_result.png`) atau vault Dual-Lock (`hideit_vault.png`)
-- ⚡ Tanpa instalasi, tanpa backend, tanpa dependency eksternal kecuali Google Fonts (opsional)
 
 ---
 
@@ -158,12 +155,6 @@ Untuk mengekstrak: pilih mode `EXTRACT`, upload gambar yang mengandung pesan, is
 - **Web Crypto API** (`crypto.subtle`) — AES-256-CBC & PBKDF2
 - **Canvas 2D API** — manipulasi piksel gambar (LSB) dan rendering histogram
 - **Google Fonts** — `JetBrains Mono` & `Geist` (opsional, via CDN)
-
----
-
-## Lisensi
-
-Proyek pribadi/akademik. Sesuaikan lisensi (misalnya MIT) jika ingin dipublikasikan sebagai open source.
 
 ---
 
